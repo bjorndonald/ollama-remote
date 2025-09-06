@@ -10,22 +10,10 @@ ENV OLLAMA_ORIGINS=*
 # Expose the Ollama port (Railway will use PORT env var)
 EXPOSE 11434
 
-# Copy health check script
+# Copy startup and health check scripts
+COPY start.sh /start.sh
 COPY healthcheck.sh /healthcheck.sh
-RUN chmod +x /healthcheck.sh
-
-# Create a startup script to handle Railway's PORT environment variable
-RUN echo '#!/bin/sh\n\
-# Use Railway\'s PORT if available, otherwise use 11434\n\
-if [ -n "$PORT" ]; then\n\
-  echo "Using Railway PORT: $PORT"\n\
-  # Ollama doesn\'t support custom ports directly, so we\'ll use 11434 internally\n\
-  # and Railway will handle the port mapping\n\
-fi\n\
-\n\
-# Start Ollama with proper host binding\n\
-exec ollama serve --host 0.0.0.0:11434' > /start.sh && \
-chmod +x /start.sh
+RUN chmod +x /start.sh /healthcheck.sh
 
 # Add health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
