@@ -20,4 +20,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD /healthcheck.sh
 
 # Start the application
-CMD ["/start.sh"]
+CMD /start.sh
