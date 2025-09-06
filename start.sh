@@ -11,6 +11,23 @@ fi
 # Set environment variables for proper host binding
 export OLLAMA_HOST=0.0.0.0:11434
 
-# Start Ollama server
+# Start Ollama server in the background
 echo "Starting Ollama server..."
-exec ollama serve
+ollama serve &
+OLLAMA_PID=$!
+
+# Wait for Ollama to start
+echo "Waiting for Ollama to start..."
+sleep 10
+
+# Pull the model if it's not already available
+echo "Checking for model: $OLLAMA_MODEL"
+if ! ollama list | grep -q "$OLLAMA_MODEL"; then
+  echo "Pulling model: $OLLAMA_MODEL"
+  ollama pull "$OLLAMA_MODEL"
+else
+  echo "Model $OLLAMA_MODEL already available"
+fi
+
+# Wait for the Ollama process
+wait $OLLAMA_PID
