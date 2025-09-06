@@ -15,9 +15,12 @@ COPY start.sh /start.sh
 COPY healthcheck.sh /healthcheck.sh
 RUN chmod +x /start.sh /healthcheck.sh
 
+# Override the entrypoint completely
+ENTRYPOINT []
+
 # Add health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD /healthcheck.sh
 
 # Start the application
-CMD /start.sh
+CMD ["/start.sh"]
