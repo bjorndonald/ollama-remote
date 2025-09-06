@@ -8,6 +8,9 @@ if [ -n "$PORT" ]; then
   # and Railway will handle the port mapping
 fi
 
-# Start Ollama with proper host binding
+# Set environment variables for proper host binding
+export OLLAMA_HOST=0.0.0.0:11434
+
+# Start Ollama server
 echo "Starting Ollama server..."
-exec ollama serve --host 0.0.0.0:11434
+exec ollama serve
